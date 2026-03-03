@@ -1,10 +1,13 @@
+CREATE DATABASE Laptop_market_sales;
+
+GO
+USE Laptop_market_sales;
 
 -- ======================================================
 -- SQL PROJECT QUESTIONS
 -- Dataset: PC Sales
 -- ======================================================
-SELECT 
-* from [Laptop_market_sales].[dbo].[Laptop_data]
+
 -- BASIC QUESTIONS
 
 -- 1. Count the total number of sales records.
