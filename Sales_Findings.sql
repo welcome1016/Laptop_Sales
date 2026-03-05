@@ -115,10 +115,18 @@ AS Total_Finance_Amount
 FROM [Laptop_market_sales].[dbo].[Laptop_data]
 
 -- 15. Find total revenue per PC Make.
-				Select PC_Make , sum (cast(Sale_price * PC_MArket_PRICE as decimal(10,2)))
+				Select PC_Make , sum (cast(Sale_price * PC_Make as bigint))-----it can't be the market price
 				AS total_revenue
 				from [Laptop_market_sales].[dbo].[Laptop_data]
 				group by PC_Make
+
+				ALTER TABLE LAPTOP_DATA
+ALTER COLUMN Sale_price DECIMAL(10,2);
+SELECT SUM(Finance_Amount)
+AS Total_Finance_Amount
+FROM [Laptop_market_sales].[dbo].[Laptop_data]
+				------------issues here
+
 
 -- 16. Find average Sale Price per Storage Type.
 		select Storage_type , avg(sale_price)
@@ -131,16 +139,35 @@ FROM [Laptop_market_sales].[dbo].[Laptop_data]
 		from [Laptop_market_sales].[dbo].[Laptop_data]
 		
 -- 17. Calculate total revenue per Shop Name.
+						Select Shop_Name , sum( cast( Pc_Make *Sale_Price as bigint) )
+						as  total_revenue_per_Shop_Name
+						from [Laptop_market_sales].[dbo].[Laptop_data]
+						group by Shop_Name 
+							--------------------another issue
 							
 
 -- 18. Calculate total revenue per Sales Person Name.
-			SELECT Sale_Person_Name, sum()
+			SELECT Sales_Person_Name, sum(cast(sale_price *PC_Make as decimal(10,2)))
 			as Total_revenue_per_sales_person
 			from [Laptop_market_sales].[dbo].[Laptop_data]
 			group by Sales_Person_Name
+			----------here i'm facing bit of a challenge-------
+
 
 -- 19. Find average Credit Score per Payment Method.
+					Select Payment_method, avg(credit_score)
+					as Average_credit_score_per_payment_method
+					from  [Laptop_market_sales].[dbo].[Laptop_data]
+					group by Payment_Method
+
 -- 20. Calculate total Cost of Repairs per Sales Person Department.
+										Select Sales_Person_Department, sum(cast(Cost_of_repairs as decimal(10,2)))
+										as total_Cost_of_Repairs_per_Sales_Person_Department
+										from   [Laptop_market_sales].[dbo].[Laptop_data]
+										group by Sales_Person_Department
+
+
+
 
 -- ADVANCED QUESTIONS
 
