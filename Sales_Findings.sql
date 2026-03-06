@@ -147,10 +147,8 @@ FROM [Laptop_market_sales].[dbo].[Laptop_data]
 							
 
 -- 18. Calculate total revenue per Sales Person Name.
-			SELECT Sales_Person_Name, sum(cast(sale_price *PC_Make as bigint))
-			as Total_revenue_per_sales_person
-			from [Laptop_market_sales].[dbo].[Laptop_data]
-			group by Sales_Person_Name
+		
+
 			----------here i'm facing bit of a challenge-------
 
 
@@ -172,6 +170,7 @@ FROM [Laptop_market_sales].[dbo].[Laptop_data]
 -- ADVANCED QUESTIONS
 
 -- 21. Calculate profit per Shop Name.
+			SELECT SHOP_Name
 -- 22. Calculate profit margin per sale ((Sale Price - Cost Price) / Sale Price).
 -- 23. Determine which Continent has the highest total revenue.
 -- 24. Calculate average Sale Price per RAM size.
