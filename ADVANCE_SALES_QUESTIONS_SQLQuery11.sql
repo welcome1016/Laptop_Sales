@@ -36,3 +36,79 @@ SELECT TOP 1 Continent , sum(Sale_Price)
 -- 28. Calculate total revenue per Storage Capacity.
 -- 29. Identify sales where Sale Price is lower than PC Market Price.
 -- 30. Rank Sales Person Name by Total Sales per Employee using a window function.
+
+
+
+
+-------NEW ADDED QUESTIONS
+--31. Which pc generates the most revenue?
+			Select * from [Laptop_market_sales].[dbo].[Laptop_data]
+
+			Select top 1 PC_make, sum(sale_price)
+			as Most_pc_revenue
+			from [Laptop_market_sales].[dbo].[Laptop_data]
+			group by  PC_Model
+
+	
+		--32 Which brand Generates the most revenue
+						Select top 1 PC_make, sum(sale_price)
+			as Most_pc_revenue
+			from [Laptop_market_sales].[dbo].[Laptop_data]
+			group by  PC_Make
+
+			--33.Which processor type sells the most?
+						Select top 1 ram, count(sale_price)--I think we can use different to choose how it will appear
+						as most_sold_processor
+						from [Laptop_market_sales].[dbo].[Laptop_data]
+						group by ram 
+
+			--34. What is the average PC  PRICE
+						SELECT AVG(SALE_PRICE)
+						AS AVG_PC_PRICE
+						FROM [Laptop_market_sales].[dbo].[laptop_data]
+
+			--35. What is the Most expensive PC sold
+				SELECT TOP 1 PC_MAKE, MAX(SALE_PRICE)
+				AS MOST_EXPENSIVE
+				FROM  [Laptop_market_sales].[dbo].[laptop_data]
+				GROUP BY PC_MAKE
+				ORDER BY PC_MAKE DESC;
+
+				--36.WHICH BRAND DOMINATE THE MARKET SHARE
+							SELECT TOP 1 PC_MAKE, COUNT(PC_MARKET_PRICE)
+							AS DOMINATING_BRAND
+							FROM [Laptop_market_sales].[dbo].[laptop_data]
+							GROUP BY PC_MAKE
+							ORDER BY PC_MAKE ASC
+							
+				--37. WHAT PERCENTAGE OF REVENUE COMES FROM HIGH-END MACHINES?
+							SELECT SUM(SALE_PRICE)
+							AS TOTAL_REVENUE
+							FROM[Laptop_market_sales].[dbo].[laptop_data]
+
+							
+							SELECT PC_MAKE ,SUM(SALE_PRICE)
+							AS PC_REVENUE
+							FROM[Laptop_market_sales].[dbo].[laptop_data]
+							GROUP BY PC_MAKE
+
+							---THEREFORE 
+							SELECT PC_MAKE,
+							sum(SALE_PRICE) as revenue,
+							SUM(SALE_PRICE)*100.01 /
+							(select SUM(SALE_PRICE) from[Laptop_market_sales].[dbo].[laptop_data])
+							AS revenue_PERCENTAGE
+							FROM [Laptop_market_sales].[dbo].[laptop_data]
+							GROUP BY PC_MAKE
+					
+
+					--38. =---WHICH PC ARE PRICED ABOVE THE AVG MARKET
+								SELECT PC_MAKE , AVG(SALE_PRICE)
+								AS PC_PRICE_AVG
+								FROM [Laptop_market_sales].[dbo].[laptop_data]
+								WHERE SALE_PRICE > (SELECT PC_MAKE , AVG(SALE_PRICE)
+								FROM [Laptop_market_sales].[dbo].[laptop_data]
+								GROUP BY PC_MAKE
+								
+
+								
