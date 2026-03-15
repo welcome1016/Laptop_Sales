@@ -8,7 +8,7 @@
 -- 22. Calculate profit margin per sale ((Sale Price - Cost Price) / Sale Price).
 			SELECT SUM(Sale_Price - Cost_Price)
 			AS Profit_Margin_per_sale
-			SELECT SUMsum(cast(Sale_Price - Cost_Price as decimal(10,2)(Sale_Pric
+			SELECT sum(cast(Sale_Price - Cost_Price as decimal(10,2))
 			from [Laptop_market_sales].[dbo].[Laptop_data]
 
 			-----we really need to calculate the profit margin for each sale not the total profit margin
@@ -30,12 +30,58 @@ SELECT TOP 1 Continent , sum(Sale_Price)
 				order by continent desc;
 
 -- 24. Calculate average Sale Price per RAM size.
+				SELECT RAM, AVG(SALE_PRICE)
+				AS SALE_PER_RAM_SIZE
+				FROM   [Laptop_market_sales].[dbo].[Laptop_data]
+				GROUP BY RAM
+				ORDER BY RAM ASC;
+
 -- 25. Find the PC Model with the highest Sale Price.
+	SELECT TOP 1 PC_Model,SUM(SALE_PRICE)
+	AS PC_MODEL_WITH_HIGHEST_PRICE
+	FROM [Laptop_market_sales].[dbo].[Laptop_data]
+	GROUP BY PC_Model
+	ORDER BY PC_Model DESC;
+	----------------LET ME GET THE MOST EXPENSILE PC_MAKE
+	SELECT TOP 1 PC_MAKE,SALE_PRICE
+	AS MOST_EXPENSIVE_PC
+	FROM [Laptop_market_sales].[dbo].[Laptop_data]
+	ORDER BY Sale_Price DESC
+
 -- 26. Calculate the average number of days between Purchase Date and Ship Date.
+							SELECT TRY_CAST(DATEDIFF(DAY,PURCHASE_DATE,SHIP_DATE) AS datetime) AS DaysDiff
+							FROM  [Laptop_market_sales].[dbo].[Laptop_data]
+
 -- 27. Determine which Sales Person Department generates the highest revenue.
+											SELECT TOP 1 SALES_PERSON_DEPARTMENT, SUM(SALE_PRICE)
+											AS HIGHEST_REVENUE
+											FROM [Laptop_market_sales].[dbo].[Laptop_data]
+											GROUP BY SALES_PERSON_DEPARTMENT
+											ORDER BY SALES_PERSON_DEPARTMENT DESC
+
+
 -- 28. Calculate total revenue per Storage Capacity.
+		SELECT STORAGE_CAPACITY, SUM(SALE_PRICE)
+		AS TOTAL_REVENUE_PER_STORAGE_CAPACITY
+		FROM [Laptop_market_sales].[dbo].[Laptop_data]
+		GROUP BY Storage_Capacity
+
 -- 29. Identify sales where Sale Price is lower than PC Market Price.
+									
+
+
+
 -- 30. Rank Sales Person Name by Total Sales per Employee using a window function.
+	
+							SELECT DISTINCT SALES_PERSON_NAME , COUNT(SALES_PERSON_NAME)
+								AS TOTAL_SALES_EMPLOYEE,
+								RANK() Over(partition order by TOTAL_SALES_PER_EMPLOYEE DESC) as TOTAL_SALES_EMPLOYEE
+								FROM  [Laptop_market_sales].[dbo].[Laptop_data]
+								GROUP BY  TOTAL_SALES_PER_EMPLOYEE
+
+
+
+
 
 
 
@@ -103,12 +149,12 @@ SELECT TOP 1 Continent , sum(Sale_Price)
 					
 
 					--38. =---WHICH PC ARE PRICED ABOVE THE AVG MARKET
-								SELECT PC_MAKE , AVG(SALE_PRICE)
+								SELECT PC_MAKE,  AVG(SALE_PRICE)
 								AS PC_PRICE_AVG
 								FROM [Laptop_market_sales].[dbo].[laptop_data]
-								WHERE SALE_PRICE > (SELECT PC_MAKE , AVG(SALE_PRICE)
-								FROM [Laptop_market_sales].[dbo].[laptop_data]
-								GROUP BY PC_MAKE
+								where Pc_Make = (select AVG(SALE_PRICE) )
+								from [Laptop_market_sales].[dbo].[laptop_data]
+								where sales_price 
 								
 
 								
