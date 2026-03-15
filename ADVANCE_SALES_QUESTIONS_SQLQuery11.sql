@@ -13,7 +13,7 @@
 
 			-----we really need to calculate the profit margin for each sale not the total profit margin
 
-			SELECT 
+	SELECT 
     Sale_Price - Cost_Price AS subtraction_result,
     CASE 
         WHEN Cost_Price <> 0 THEN Sale_Price / Cost_Price
@@ -23,11 +23,11 @@ FROM  [Laptop_market_sales].[dbo].[Laptop_data]
 
 
 -- 23. Determine which Continent has the highest total revenue.
-SELECT TOP 1 Continent , sum(Sale_Price)
-				as Highest_total_revenue
-				from  [Laptop_market_sales].[dbo].[Laptop_data]
-				group by continent 
-				order by continent desc;
+								SELECT TOP 1 Continent , sum(Sale_Price)
+												as Highest_total_revenue
+												from  [Laptop_market_sales].[dbo].[Laptop_data]
+												group by continent 
+												order by continent desc;
 
 -- 24. Calculate average Sale Price per RAM size.
 				SELECT RAM, AVG(SALE_PRICE)
@@ -67,9 +67,12 @@ SELECT TOP 1 Continent , sum(Sale_Price)
 		GROUP BY Storage_Capacity
 
 -- 29. Identify sales where Sale Price is lower than PC Market Price.
-									
-
-
+									select Sale_Price, PC_Market_Price, PC_Make,Sales_Person_Name,PC_Model
+									as sale_price_lower_than_pc_market_price
+									from [Laptop_market_sales].[dbo].[Laptop_data]
+									where Sale_Price < PC_Market_Price
+									order by Sale_Price
+									-----if I put = SQL Returns values but if not it returns non
 
 -- 30. Rank Sales Person Name by Total Sales per Employee using a window function.
 	
@@ -78,13 +81,6 @@ SELECT TOP 1 Continent , sum(Sale_Price)
 								RANK() Over(partition order by TOTAL_SALES_PER_EMPLOYEE DESC) as TOTAL_SALES_EMPLOYEE
 								FROM  [Laptop_market_sales].[dbo].[Laptop_data]
 								GROUP BY  TOTAL_SALES_PER_EMPLOYEE
-
-
-
-
-
-
-
 
 -------NEW ADDED QUESTIONS
 --31. Which pc generates the most revenue?
@@ -149,12 +145,20 @@ SELECT TOP 1 Continent , sum(Sale_Price)
 					
 
 					--38. =---WHICH PC ARE PRICED ABOVE THE AVG MARKET
-								SELECT PC_MAKE,  AVG(SALE_PRICE)
-								AS PC_PRICE_AVG
-								FROM [Laptop_market_sales].[dbo].[laptop_data]
-								where Pc_Make = (select AVG(SALE_PRICE) )
+								SELECT PC_MAKE,PC_Market_Price,Sale_Price
+								FROM [Laptop_market_sales].[dbo].[laptop_data],
+								(select avg(pc_market_price) 
+								from [Laptop_market_sales].[dbo].[laptop_data]) as  Pc_market_price
+								where pc_market_price >	(select avg(pc_market_price) 
 								from [Laptop_market_sales].[dbo].[laptop_data]
-								where sales_price 
 								
+								
+								------the correct one---
 
-								
+SELECT PC_Make, PC_Market_Price,
+       (SELECT AVG(PC_Market_Price) 
+        FROM [Laptop_market_sales].[dbo].[laptop_data]) AS Avg_Market_Price
+FROM [Laptop_market_sales].[dbo].[laptop_data]
+WHERE PC_Market_Price >
+      (SELECT AVG(PC_Market_Price)
+       FROM [Laptop_market_sales].[dbo].[laptop_data]);
