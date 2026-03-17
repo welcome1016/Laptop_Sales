@@ -6,10 +6,11 @@
 			from [Laptop_market_sales].[dbo].[Laptop_data]
 			group by Shop_Name
 -- 22. Calculate profit margin per sale ((Sale Price - Cost Price) / Sale Price).
-			SELECT SUM(Sale_Price - Cost_Price)
+			SELECT PC_Make,SUM(cast(Sale_Price *Total_Sales_per_Employee as decimal (10,2)))/ SUM(cast(Cost_price as decimal(10,2)))
 			AS Profit_Margin_per_sale
-			SELECT sum(cast(Sale_Price - Cost_Price as decimal(10,2))
 			from [Laptop_market_sales].[dbo].[Laptop_data]
+			GROUP BY PC_Make
+			ORDER BY  Profit_Margin_per_sale desc
 
 			-----we really need to calculate the profit margin for each sale not the total profit margin
 
@@ -49,9 +50,11 @@ FROM  [Laptop_market_sales].[dbo].[Laptop_data]
 	ORDER BY Sale_Price DESC
 
 -- 26. Calculate the average number of days between Purchase Date and Ship Date.
-							SELECT TRY_CAST(DATEDIFF(DAY,PURCHASE_DATE,SHIP_DATE) AS datetime) AS DaysDiff
-							FROM  [Laptop_market_sales].[dbo].[Laptop_data]
-
+							SELECT AVG(DATEDIFF(DAY,
+							TRY_CAST ( PURCHASE_DATE AS datetime),
+							TRY_CAST ( SHIP_DATE AS datetime))) AS AVG_DAYS
+							FROM [Laptop_market_sales].[dbo].[Laptop_data]
+							
 -- 27. Determine which Sales Person Department generates the highest revenue.
 											SELECT TOP 1 SALES_PERSON_DEPARTMENT, SUM(SALE_PRICE)
 											AS HIGHEST_REVENUE
@@ -76,11 +79,20 @@ FROM  [Laptop_market_sales].[dbo].[Laptop_data]
 
 -- 30. Rank Sales Person Name by Total Sales per Employee using a window function.
 	
-							SELECT DISTINCT SALES_PERSON_NAME , COUNT(SALES_PERSON_NAME)
-								AS TOTAL_SALES_EMPLOYEE,
-								RANK() Over(partition order by TOTAL_SALES_PER_EMPLOYEE DESC) as TOTAL_SALES_EMPLOYEE
+							SELECT DISTINCT Sale_Price
+								as TOTAL_SALES_PER_EMPLOYEE,
+								RANK() Over(partition by sale_price  order by sale_price  DESC) as TOTAL_SALES_MPLOYEE
 								FROM  [Laptop_market_sales].[dbo].[Laptop_data]
-								GROUP BY  TOTAL_SALES_PER_EMPLOYEE
+								GROUP BY  Sale_Price
+								order by Sale_Price DESC
+								--------------------------------------------------------
+								SELECT SALES_PERSON_NAME, TOTAL_SALES_PER_EMPLOYEE,
+								RANK() OVER( ORDER BY TOTAL_SALES_PER_EMPLOYEE DESC) AS SALES_RANK
+								FROM [Laptop_market_sales].[dbo].[Laptop_data]
+
+
+
+
 
 -------NEW ADDED QUESTIONS
 --31. Which pc generates the most revenue?
@@ -148,7 +160,7 @@ FROM  [Laptop_market_sales].[dbo].[Laptop_data]
 								SELECT PC_MAKE,PC_Market_Price,Sale_Price
 								FROM [Laptop_market_sales].[dbo].[laptop_data],
 								(select avg(pc_market_price) 
-								from [Laptop_market_sales].[dbo].[laptop_data]) as  Pc_market_price
+								from [Laptop_market_sales].[dbo].[laptop_data]
 								where pc_market_price >	(select avg(pc_market_price) 
 								from [Laptop_market_sales].[dbo].[laptop_data]
 								
