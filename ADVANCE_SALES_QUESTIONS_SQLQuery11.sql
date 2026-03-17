@@ -12,15 +12,23 @@
 			GROUP BY PC_Make
 			ORDER BY  Profit_Margin_per_sale desc
 
+
+
+			SELECT
+    Pc_Make,
+    SUM(Sale_Price) AS Revenue,
+    SUM(Sale_Price) * 100.0
+    / SUM(SUM(Sale_Price))
+    OVER () AS Revenue_Percentage
+FROM [Laptop_market_sales].[dbo].[Laptop_data]
+			GROUP BY PC_Make
+GROUP BY Pc_Make
+ORDER BY Revenue
+
+
 			-----we really need to calculate the profit margin for each sale not the total profit margin
 
-	SELECT 
-    Sale_Price - Cost_Price AS subtraction_result,
-    CASE 
-        WHEN Cost_Price <> 0 THEN Sale_Price / Cost_Price
-        ELSE NULL
-    END AS division_result
-FROM  [Laptop_market_sales].[dbo].[Laptop_data]
+
 
 
 -- 23. Determine which Continent has the highest total revenue.
@@ -28,17 +36,19 @@ FROM  [Laptop_market_sales].[dbo].[Laptop_data]
 												as Highest_total_revenue
 												from  [Laptop_market_sales].[dbo].[Laptop_data]
 												group by continent 
-												order by continent desc;
+												order by Highest_total_revenue desc;
 
 -- 24. Calculate average Sale Price per RAM size.
 				SELECT RAM, AVG(SALE_PRICE)
 				AS SALE_PER_RAM_SIZE
 				FROM   [Laptop_market_sales].[dbo].[Laptop_data]
 				GROUP BY RAM
-				ORDER BY RAM ASC;
+				ORDER BY ram ASC;
+			
+			
 
 -- 25. Find the PC Model with the highest Sale Price.
-	SELECT TOP 1 PC_Model,SUM(SALE_PRICE)
+	SELECT TOP 1 PC_Model,sum(SALE_PRICE)
 	AS PC_MODEL_WITH_HIGHEST_PRICE
 	FROM [Laptop_market_sales].[dbo].[Laptop_data]
 	GROUP BY PC_Model
@@ -60,7 +70,7 @@ FROM  [Laptop_market_sales].[dbo].[Laptop_data]
 											AS HIGHEST_REVENUE
 											FROM [Laptop_market_sales].[dbo].[Laptop_data]
 											GROUP BY SALES_PERSON_DEPARTMENT
-											ORDER BY SALES_PERSON_DEPARTMENT DESC
+											ORDER BY HIGHEST_REVENUE DESC
 
 
 -- 28. Calculate total revenue per Storage Capacity.
@@ -73,7 +83,7 @@ FROM  [Laptop_market_sales].[dbo].[Laptop_data]
 									select Sale_Price, PC_Market_Price, PC_Make,Sales_Person_Name,PC_Model
 									as sale_price_lower_than_pc_market_price
 									from [Laptop_market_sales].[dbo].[Laptop_data]
-									where Sale_Price < PC_Market_Price
+									where Sale_Price < PC_Market_Price 
 									order by Sale_Price
 									-----if I put = SQL Returns values but if not it returns non
 
@@ -90,7 +100,7 @@ FROM  [Laptop_market_sales].[dbo].[Laptop_data]
 								RANK() OVER( ORDER BY TOTAL_SALES_PER_EMPLOYEE DESC) AS SALES_RANK
 								FROM [Laptop_market_sales].[dbo].[Laptop_data]
 
-
+			
 
 
 
